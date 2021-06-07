@@ -2,6 +2,86 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./js/modules/bezie.js":
+/*!*****************************!*\
+  !*** ./js/modules/bezie.js ***!
+  \*****************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+const bezie = (callstack) => {
+    const arr = [];
+
+    const Bezie2Point = () => {
+        let t = 0;
+        //приращение
+        let dt = 1 / Math.abs(Math.abs(callstack[0][0]) - Math.abs(callstack[1][0]));
+        while (t < 1) {
+            arr.push([
+                (1 - t) * callstack[0][0] + t * callstack[1][0],
+                (1 - t) * callstack[0][1] + t * callstack[1][1],
+            ]);
+            t += dt;
+        }
+    };
+
+    const Bezie3Point = () => {
+        let t = 0;
+        //приращение
+        let dt = 1 / Math.abs(Math.abs(callstack[0][0]) - Math.abs(callstack[2][0]));
+        while (t < 1) {
+            //формула для  2 точек
+            arr.push([
+                (1 - t) * (1 - t) * callstack[0][0] + 2 * (1 - t) * t * callstack[1][0] + t * t * callstack[2][0],
+                (1 - t) * (1 - t) * callstack[0][1] + 2 * (1 - t) * t * callstack[1][1] + t * t * callstack[2][1],
+            ]);
+            t += dt;
+        }
+    };
+
+    const Bezie4Point = () => {
+        let t = 0;
+        //приращение
+        let dt = 1 / Math.abs(Math.abs(callstack[0][0]) - Math.abs(callstack[3][0]));
+        while (t < 1) {
+            //формула для  2 точек
+            arr.push([
+                (1 - t) * (1 - t) * (1 - t) * callstack[0][0] +
+                    3 * (1 - t) * (1 - t) * t * callstack[1][0] +
+                    3 * (1 - t) * t * t * callstack[2][0] +
+                    t * t * t * callstack[3][0],
+                (1 - t) * (1 - t) * (1 - t) * callstack[0][1] +
+                    3 * (1 - t) * (1 - t) * t * callstack[1][1] +
+                    3 * (1 - t) * t * t * callstack[2][1] +
+                    t * t * t * callstack[3][1],
+            ]);
+            t += dt;
+        }
+    };
+
+    //алгоритм для двух точек
+    switch (callstack.length) {
+        case 2:
+            Bezie2Point();
+            break;
+        case 3:
+            Bezie3Point();
+            break;
+        case 4:
+            Bezie4Point();
+            break;
+    }
+    return arr;
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (bezie);
+
+
+/***/ }),
+
 /***/ "./js/modules/brezencheim.js":
 /*!***********************************!*\
   !*** ./js/modules/brezencheim.js ***!
@@ -215,7 +295,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_brezencheim__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modules/brezencheim */ "./js/modules/brezencheim.js");
 /* harmony import */ var _modules_diff__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/diff */ "./js/modules/diff.js");
 /* harmony import */ var _modules_circle__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/circle */ "./js/modules/circle.js");
-// import Bezie from "./modules/bezie";
+/* harmony import */ var _modules_bezie__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/bezie */ "./js/modules/bezie.js");
+
 
 
 
@@ -226,6 +307,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.fillStyle = "black";
 
     const clearButton = document.querySelector("#clearButton");
+    const dotcount = document.querySelector("#dotcount");
 
     const radios = document.querySelectorAll("[type=radio]");
 
@@ -311,7 +393,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (callstack.length === 2) {
                     console.log(callstack);
                     (0,_modules_circle__WEBPACK_IMPORTED_MODULE_2__.default)(callstack).forEach(([x, y]) => {
-                        console.log(x, y);
                         ctx.fillRect(x, y, 1, 1);
                     });
                     console.log(callstack);
@@ -319,7 +400,17 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
                 break;
             case "bezie":
-                console.log("bezie");
+                callstack.push(getCoord(e));
+                // если выбраны 2 точки
+                if (callstack.length >= +dotcount.value) {
+                    console.log(callstack);
+                    (0,_modules_bezie__WEBPACK_IMPORTED_MODULE_3__.default)(callstack).forEach(([x, y]) => {
+                        console.log(x, y);
+                        ctx.fillRect(x, y, 1, 1);
+                    });
+                    console.log(callstack);
+                    callstack = [];
+                }
                 break;
             case "sazerland":
                 console.log("saz");

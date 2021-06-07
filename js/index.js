@@ -1,7 +1,7 @@
-// import Bezie from "./modules/bezie";
 import brezencheim from "./modules/brezencheim";
 import differ from "./modules/diff"
 import circle from "./modules/circle"
+import bezie from "./modules/bezie";
 
 document.addEventListener("DOMContentLoaded", () => {
     const canvas = document.querySelector("canvas");
@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.fillStyle = "black";
 
     const clearButton = document.querySelector("#clearButton");
+    const dotcount = document.querySelector("#dotcount");
 
     const radios = document.querySelectorAll("[type=radio]");
 
@@ -94,7 +95,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (callstack.length === 2) {
                     console.log(callstack);
                     circle(callstack).forEach(([x, y]) => {
-                        console.log(x, y);
                         ctx.fillRect(x, y, 1, 1);
                     });
                     console.log(callstack);
@@ -102,7 +102,17 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
                 break;
             case "bezie":
-                console.log("bezie");
+                callstack.push(getCoord(e));
+                // если выбраны 2 точки
+                if (callstack.length >= +dotcount.value) {
+                    console.log(callstack);
+                    bezie(callstack).forEach(([x, y]) => {
+                        console.log(x, y);
+                        ctx.fillRect(x, y, 1, 1);
+                    });
+                    console.log(callstack);
+                    callstack = [];
+                }
                 break;
             case "sazerland":
                 console.log("saz");
