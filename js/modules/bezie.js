@@ -3,7 +3,6 @@ const bezie = (callstack) => {
 
     const Bezie2Point = () => {
         let t = 0;
-        //приращение
         let dt = 1 / Math.abs(Math.abs(callstack[0][0]) - Math.abs(callstack[1][0]));
         while (t < 1) {
             arr.push([
@@ -16,10 +15,8 @@ const bezie = (callstack) => {
 
     const Bezie3Point = () => {
         let t = 0;
-        //приращение
         let dt = 1 / Math.abs(Math.abs(callstack[0][0]) - Math.abs(callstack[2][0]));
         while (t < 1) {
-            //формула для  2 точек
             arr.push([
                 (1 - t) * (1 - t) * callstack[0][0] + 2 * (1 - t) * t * callstack[1][0] + t * t * callstack[2][0],
                 (1 - t) * (1 - t) * callstack[0][1] + 2 * (1 - t) * t * callstack[1][1] + t * t * callstack[2][1],
@@ -30,10 +27,8 @@ const bezie = (callstack) => {
 
     const Bezie4Point = () => {
         let t = 0;
-        //приращение
         let dt = 1 / Math.abs(Math.abs(callstack[0][0]) - Math.abs(callstack[3][0]));
         while (t < 1) {
-            //формула для  2 точек
             arr.push([
                 (1 - t) * (1 - t) * (1 - t) * callstack[0][0] +
                     3 * (1 - t) * (1 - t) * t * callstack[1][0] +
@@ -48,7 +43,6 @@ const bezie = (callstack) => {
         }
     };
 
-    //алгоритм для двух точек
     switch (callstack.length) {
         case 2:
             Bezie2Point();
@@ -59,7 +53,7 @@ const bezie = (callstack) => {
         case 4:
             Bezie4Point();
             break;
-    }
+    }   
     return arr;
 };
 

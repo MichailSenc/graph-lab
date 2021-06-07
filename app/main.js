@@ -17,7 +17,6 @@ const bezie = (callstack) => {
 
     const Bezie2Point = () => {
         let t = 0;
-        //приращение
         let dt = 1 / Math.abs(Math.abs(callstack[0][0]) - Math.abs(callstack[1][0]));
         while (t < 1) {
             arr.push([
@@ -30,10 +29,8 @@ const bezie = (callstack) => {
 
     const Bezie3Point = () => {
         let t = 0;
-        //приращение
         let dt = 1 / Math.abs(Math.abs(callstack[0][0]) - Math.abs(callstack[2][0]));
         while (t < 1) {
-            //формула для  2 точек
             arr.push([
                 (1 - t) * (1 - t) * callstack[0][0] + 2 * (1 - t) * t * callstack[1][0] + t * t * callstack[2][0],
                 (1 - t) * (1 - t) * callstack[0][1] + 2 * (1 - t) * t * callstack[1][1] + t * t * callstack[2][1],
@@ -44,10 +41,8 @@ const bezie = (callstack) => {
 
     const Bezie4Point = () => {
         let t = 0;
-        //приращение
         let dt = 1 / Math.abs(Math.abs(callstack[0][0]) - Math.abs(callstack[3][0]));
         while (t < 1) {
-            //формула для  2 точек
             arr.push([
                 (1 - t) * (1 - t) * (1 - t) * callstack[0][0] +
                     3 * (1 - t) * (1 - t) * t * callstack[1][0] +
@@ -62,7 +57,6 @@ const bezie = (callstack) => {
         }
     };
 
-    //алгоритм для двух точек
     switch (callstack.length) {
         case 2:
             Bezie2Point();
@@ -73,7 +67,7 @@ const bezie = (callstack) => {
         case 4:
             Bezie4Point();
             break;
-    }
+    }   
     return arr;
 };
 
@@ -314,11 +308,13 @@ document.addEventListener("DOMContentLoaded", () => {
     let callstack = []; // тут будет хранится старые точки
     let checkedID = "brezenheim";
 
-    clearButton.addEventListener("click", () => {
+    const clearCanvas = () => {
         canvas
-            .getContext("2d")
-            .clearRect(0, 0, canvas.getBoundingClientRect().width, canvas.getBoundingClientRect().height);
-    });
+        .getContext("2d")
+        .clearRect(0, 0, canvas.getBoundingClientRect().width, canvas.getBoundingClientRect().height);
+    }
+
+    clearButton.addEventListener("click", clearCanvas);
 
     radios.forEach((item) =>
         item.addEventListener("change", () => {
@@ -326,6 +322,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (item.getAttribute("id") !== checkedID) {
                     callstack = [];
                     checkedID = item.getAttribute("id");
+                    clearCanvas();
+                    if (item.getAttribute("type-cut")) {
+                        drawRectangle();
+                    }
                 }
             }
         })
@@ -345,17 +345,28 @@ document.addEventListener("DOMContentLoaded", () => {
         return [x, y];
     };
 
-    function windowToCanvas(canvas, x, y) {
-        let bbox = canvas.getBoundingClientRect();
-        x -= bbox.left * (canvas.width / bbox.width);
-        y -= bbox.top * (canvas.height / bbox.height);
-        return { x, y };
-    }
-
     canvas.addEventListener("mousemove", (e) => {
-        let [ x, y ] = getCoord(e);
+        let [x, y] = getCoord(e);
         document.querySelector(".coordinates").innerHTML = `X: ${x}; Y: ${y}`;
     });
+
+    const drawRectangle = () => {
+        ctx.moveTo(0, 200);
+        ctx.lineTo(1000, 200);
+        ctx.stroke();
+
+        ctx.moveTo(0, 400);
+        ctx.lineTo(1000, 400);
+        ctx.stroke();
+
+        ctx.moveTo(333, 0);
+        ctx.lineTo(333, 600);
+        ctx.stroke();
+
+        ctx.moveTo(666, 0);
+        ctx.lineTo(666, 600);
+        ctx.stroke();
+    };
 
     canvas.addEventListener("click", (e) => {
         let width = canvas.getBoundingClientRect().width;
@@ -366,7 +377,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 callstack.push(getCoord(e));
                 // если выбраны 2 точки
                 if (callstack.length === 2) {
-                    console.log(callstack);
                     (0,_modules_brezencheim__WEBPACK_IMPORTED_MODULE_0__.default)(callstack).forEach(([x, y]) => {
                         ctx.fillRect(x, y, 1, 1);
                     });
@@ -378,7 +388,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 callstack.push(getCoord(e));
                 // если выбраны 2 точки
                 if (callstack.length === 2) {
-                    console.log(callstack);
                     (0,_modules_diff__WEBPACK_IMPORTED_MODULE_1__.default)(callstack).forEach(([x, y]) => {
                         console.log(x, y);
                         ctx.fillRect(x, y, 1, 1);
@@ -391,7 +400,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 callstack.push(getCoord(e));
                 // если выбраны 2 точки
                 if (callstack.length === 2) {
-                    console.log(callstack);
                     (0,_modules_circle__WEBPACK_IMPORTED_MODULE_2__.default)(callstack).forEach(([x, y]) => {
                         ctx.fillRect(x, y, 1, 1);
                     });
@@ -403,7 +411,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 callstack.push(getCoord(e));
                 // если выбраны 2 точки
                 if (callstack.length >= +dotcount.value) {
-                    console.log(callstack);
                     (0,_modules_bezie__WEBPACK_IMPORTED_MODULE_3__.default)(callstack).forEach(([x, y]) => {
                         console.log(x, y);
                         ctx.fillRect(x, y, 1, 1);

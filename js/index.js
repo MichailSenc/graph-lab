@@ -1,6 +1,6 @@
 import brezencheim from "./modules/brezencheim";
-import differ from "./modules/diff"
-import circle from "./modules/circle"
+import differ from "./modules/diff";
+import circle from "./modules/circle";
 import bezie from "./modules/bezie";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -16,11 +16,13 @@ document.addEventListener("DOMContentLoaded", () => {
     let callstack = []; // тут будет хранится старые точки
     let checkedID = "brezenheim";
 
-    clearButton.addEventListener("click", () => {
+    const clearCanvas = () => {
         canvas
-            .getContext("2d")
-            .clearRect(0, 0, canvas.getBoundingClientRect().width, canvas.getBoundingClientRect().height);
-    });
+        .getContext("2d")
+        .clearRect(0, 0, canvas.getBoundingClientRect().width, canvas.getBoundingClientRect().height);
+    }
+
+    clearButton.addEventListener("click", clearCanvas);
 
     radios.forEach((item) =>
         item.addEventListener("change", () => {
@@ -28,6 +30,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (item.getAttribute("id") !== checkedID) {
                     callstack = [];
                     checkedID = item.getAttribute("id");
+                    clearCanvas();
+                    if (item.getAttribute("type-cut")) {
+                        drawRectangle();
+                    }
                 }
             }
         })
@@ -47,17 +53,28 @@ document.addEventListener("DOMContentLoaded", () => {
         return [x, y];
     };
 
-    function windowToCanvas(canvas, x, y) {
-        let bbox = canvas.getBoundingClientRect();
-        x -= bbox.left * (canvas.width / bbox.width);
-        y -= bbox.top * (canvas.height / bbox.height);
-        return { x, y };
-    }
-
     canvas.addEventListener("mousemove", (e) => {
-        let [ x, y ] = getCoord(e);
+        let [x, y] = getCoord(e);
         document.querySelector(".coordinates").innerHTML = `X: ${x}; Y: ${y}`;
     });
+
+    const drawRectangle = () => {
+        ctx.moveTo(0, 200);
+        ctx.lineTo(1000, 200);
+        ctx.stroke();
+
+        ctx.moveTo(0, 400);
+        ctx.lineTo(1000, 400);
+        ctx.stroke();
+
+        ctx.moveTo(333, 0);
+        ctx.lineTo(333, 600);
+        ctx.stroke();
+
+        ctx.moveTo(666, 0);
+        ctx.lineTo(666, 600);
+        ctx.stroke();
+    };
 
     canvas.addEventListener("click", (e) => {
         let width = canvas.getBoundingClientRect().width;
@@ -68,7 +85,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 callstack.push(getCoord(e));
                 // если выбраны 2 точки
                 if (callstack.length === 2) {
-                    console.log(callstack);
                     brezencheim(callstack).forEach(([x, y]) => {
                         ctx.fillRect(x, y, 1, 1);
                     });
@@ -80,7 +96,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 callstack.push(getCoord(e));
                 // если выбраны 2 точки
                 if (callstack.length === 2) {
-                    console.log(callstack);
                     differ(callstack).forEach(([x, y]) => {
                         console.log(x, y);
                         ctx.fillRect(x, y, 1, 1);
@@ -93,7 +108,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 callstack.push(getCoord(e));
                 // если выбраны 2 точки
                 if (callstack.length === 2) {
-                    console.log(callstack);
                     circle(callstack).forEach(([x, y]) => {
                         ctx.fillRect(x, y, 1, 1);
                     });
@@ -105,7 +119,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 callstack.push(getCoord(e));
                 // если выбраны 2 точки
                 if (callstack.length >= +dotcount.value) {
-                    console.log(callstack);
                     bezie(callstack).forEach(([x, y]) => {
                         console.log(x, y);
                         ctx.fillRect(x, y, 1, 1);
