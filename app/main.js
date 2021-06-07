@@ -66,10 +66,10 @@ const circle = ([[x, y], [xr, yr]]) => {
     delta = 2 * (1 - r);
 
     do {
-        arr.push(x + x1, y + y1);
-        arr.push(x - x1, y + y1);
-        arr.push(x + x1, y - y1);
-        arr.push(x - x1, y - y1);
+        arr.push([x + x1, y + y1]);
+        arr.push([x - x1, y + y1]);
+        arr.push([x + x1, y - y1]);
+        arr.push([x - x1, y - y1]);
 
         f = 0;
         if (y1 < yk) break;
@@ -94,7 +94,7 @@ const circle = ([[x, y], [xr, yr]]) => {
             delta += 2 * (x1 - y1 - 1);
         }
     } while (1);
-    
+
     return arr;
 };
 
