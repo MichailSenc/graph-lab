@@ -24,8 +24,10 @@ const differ = ([[x1, y1], [x2, y2]]) => {
 	{
 		x += dX;
 		y += dY;
-		arr.push(Math.round(x), Math.round(y));
+		arr.push([Math.round(x), Math.round(y)]);
 	}
+
+    return arr;
 };
 
 export default differ;

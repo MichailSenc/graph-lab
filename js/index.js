@@ -1,6 +1,7 @@
 // import Bezie from "./modules/bezie";
 import brezencheim from "./modules/brezencheim";
 import differ from "./modules/diff"
+import circle from "./modules/circle"
 
 document.addEventListener("DOMContentLoaded", () => {
     const canvas = document.querySelector("canvas");
@@ -68,14 +69,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (callstack.length === 2) {
                     console.log(callstack);
                     brezencheim(callstack).forEach(([x, y]) => {
-                        console.log(x, y);
                         ctx.fillRect(x, y, 1, 1);
                     });
                     console.log(callstack);
                     callstack = [];
                 }
                 break;
-            case "diifer":
+            case "differ":
                 callstack.push(getCoord(e));
                 // если выбраны 2 точки
                 if (callstack.length === 2) {
@@ -89,7 +89,17 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
                 break;
             case "circle":
-                console.log("cirk");
+                callstack.push(getCoord(e));
+                // если выбраны 2 точки
+                if (callstack.length === 2) {
+                    console.log(callstack);
+                    circle(callstack).forEach(([x, y]) => {
+                        console.log(x, y);
+                        ctx.fillRect(x, y, 1, 1);
+                    });
+                    console.log(callstack);
+                    callstack = [];
+                }
                 break;
             case "bezie":
                 console.log("bezie");

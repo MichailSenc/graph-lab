@@ -42,6 +42,66 @@ const brezencheim = ([[x1, y1], [x2, y2]]) => {
 
 /***/ }),
 
+/***/ "./js/modules/circle.js":
+/*!******************************!*\
+  !*** ./js/modules/circle.js ***!
+  \******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+const circle = ([[x, y], [xr, yr]]) => {
+    let r = Math.sqrt((xr - x) ** 2 + (yr - y) ** 2);
+    let x1,
+        y1,
+        yk = 0;
+    let sigma, delta, f;
+
+    let arr = [];
+
+    x1 = 0;
+    y1 = r;
+    delta = 2 * (1 - r);
+
+    do {
+        arr.push(x + x1, y + y1);
+        arr.push(x - x1, y + y1);
+        arr.push(x + x1, y - y1);
+        arr.push(x - x1, y - y1);
+
+        f = 0;
+        if (y1 < yk) break;
+        if (delta < 0) {
+            sigma = 2 * (delta + y1) - 1;
+            if (sigma <= 0) {
+                x1++;
+                delta += 2 * x1 + 1;
+                f = 1;
+            }
+        } else if (delta > 0) {
+            sigma = 2 * (delta - x1) - 1;
+            if (sigma > 0) {
+                y1--;
+                delta += 1 - 2 * y1;
+                f = 1;
+            }
+        }
+        if (!f) {
+            x1++;
+            y1--;
+            delta += 2 * (x1 - y1 - 1);
+        }
+    } while (1);
+    
+    return arr;
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (circle);
+
+/***/ }),
+
 /***/ "./js/modules/diff.js":
 /*!****************************!*\
   !*** ./js/modules/diff.js ***!
@@ -78,8 +138,10 @@ const differ = ([[x1, y1], [x2, y2]]) => {
 	{
 		x += dX;
 		y += dY;
-		arr.push(Math.round(x), Math.round(y));
+		arr.push([Math.round(x), Math.round(y)]);
 	}
+
+    return arr;
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (differ);
@@ -152,7 +214,9 @@ var __webpack_exports__ = {};
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_brezencheim__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modules/brezencheim */ "./js/modules/brezencheim.js");
 /* harmony import */ var _modules_diff__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/diff */ "./js/modules/diff.js");
+/* harmony import */ var _modules_circle__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/circle */ "./js/modules/circle.js");
 // import Bezie from "./modules/bezie";
+
 
 
 
@@ -222,14 +286,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (callstack.length === 2) {
                     console.log(callstack);
                     (0,_modules_brezencheim__WEBPACK_IMPORTED_MODULE_0__.default)(callstack).forEach(([x, y]) => {
-                        console.log(x, y);
                         ctx.fillRect(x, y, 1, 1);
                     });
                     console.log(callstack);
                     callstack = [];
                 }
                 break;
-            case "diifer":
+            case "differ":
                 callstack.push(getCoord(e));
                 // если выбраны 2 точки
                 if (callstack.length === 2) {
@@ -243,7 +306,17 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
                 break;
             case "circle":
-                console.log("cirk");
+                callstack.push(getCoord(e));
+                // если выбраны 2 точки
+                if (callstack.length === 2) {
+                    console.log(callstack);
+                    (0,_modules_circle__WEBPACK_IMPORTED_MODULE_2__.default)(callstack).forEach(([x, y]) => {
+                        console.log(x, y);
+                        ctx.fillRect(x, y, 1, 1);
+                    });
+                    console.log(callstack);
+                    callstack = [];
+                }
                 break;
             case "bezie":
                 console.log("bezie");
