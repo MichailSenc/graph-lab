@@ -40,6 +40,51 @@ const brezencheim = ([[x1, y1], [x2, y2]]) => {
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (brezencheim);
 
 
+/***/ }),
+
+/***/ "./js/modules/diff.js":
+/*!****************************!*\
+  !*** ./js/modules/diff.js ***!
+  \****************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+const differ = ([[x1, y1], [x2, y2]]) => {
+    const arr = [];
+    x1 = Math.round(x1);
+    x2 = Math.round(x2);
+    y1 = Math.round(y1);
+    y2 = Math.round(y2);
+
+    const deltaX = Math.abs(x1 - x2);
+    const deltaY = Math.abs(y1 - y2);
+    let length = Math.max(deltaX, deltaY);
+
+    arr.push([x1, y1]);
+    if (length == 0) return;
+
+    let dX = (x2 - x1) / length;
+	let dY = (y2 - y1) / length;
+
+    let x = x1;
+	let y = y1;
+ 
+    length++;
+
+    while (length--)
+	{
+		x += dX;
+		y += dY;
+		arr.push(Math.round(x), Math.round(y));
+	}
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (differ);
+
+
 /***/ })
 
 /******/ 	});
@@ -106,7 +151,9 @@ var __webpack_exports__ = {};
   \*********************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_brezencheim__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modules/brezencheim */ "./js/modules/brezencheim.js");
+/* harmony import */ var _modules_diff__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/diff */ "./js/modules/diff.js");
 // import Bezie from "./modules/bezie";
+
 
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -162,8 +209,6 @@ document.addEventListener("DOMContentLoaded", () => {
     canvas.addEventListener("mousemove", (e) => {
         let [ x, y ] = getCoord(e);
         document.querySelector(".coordinates").innerHTML = `X: ${x}; Y: ${y}`;
-        ctx.fillRect(1,1,1,1);
-        console.log(canvas.width, canvas.height);
     });
 
     canvas.addEventListener("click", (e) => {
@@ -185,7 +230,17 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
                 break;
             case "diifer":
-                console.log("dif");
+                callstack.push(getCoord(e));
+                // если выбраны 2 точки
+                if (callstack.length === 2) {
+                    console.log(callstack);
+                    (0,_modules_diff__WEBPACK_IMPORTED_MODULE_1__.default)(callstack).forEach(([x, y]) => {
+                        console.log(x, y);
+                        ctx.fillRect(x, y, 1, 1);
+                    });
+                    console.log(callstack);
+                    callstack = [];
+                }
                 break;
             case "circle":
                 console.log("cirk");
