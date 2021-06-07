@@ -21,7 +21,7 @@ export default class Bezie {
 
     //алгоритм для двух точек
     DrowBezie = () => {
-        switch (array_x.Count()) {
+        switch (this.array_x.Count()) {
             case 2:
                 Bezie2Point();
                 break;
