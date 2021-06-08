@@ -2,6 +2,7 @@ import brezencheim from "./modules/brezencheim";
 import differ from "./modules/diff";
 import circle from "./modules/circle";
 import bezie from "./modules/bezie";
+import midpoint from "./modules/midpoint";
 
 document.addEventListener("DOMContentLoaded", () => {
     const canvas = document.querySelector("canvas");
@@ -18,9 +19,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const clearCanvas = () => {
         canvas
-        .getContext("2d")
-        .clearRect(0, 0, canvas.getBoundingClientRect().width, canvas.getBoundingClientRect().height);
-    }
+            .getContext("2d")
+            .clearRect(0, 0, canvas.getBoundingClientRect().width, canvas.getBoundingClientRect().height);
+    };
 
     clearButton.addEventListener("click", clearCanvas);
 
@@ -134,7 +135,19 @@ document.addEventListener("DOMContentLoaded", () => {
                 console.log("cirus");
                 break;
             case "midpoint":
-                console.log("mid");
+                callstack.push(getCoord(e));
+                // если выбраны 2 точки
+                if (callstack.length === 2) {
+                    const arr = midpoint(callstack);
+                    console.log(arr);
+                    arr.forEach(([[x1, y1], [x2, y2]]) => {
+                        ctx.moveTo(x1,y1);
+                        ctx.lineTo(x2,y2);
+                        ctx.stroke();
+                    });
+                    console.log(callstack);
+                    callstack = [];
+                }
                 break;
             default:
                 break;

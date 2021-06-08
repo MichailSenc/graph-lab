@@ -221,6 +221,64 @@ const differ = ([[x1, y1], [x2, y2]]) => {
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (differ);
 
 
+/***/ }),
+
+/***/ "./js/modules/midpoint.js":
+/*!********************************!*\
+  !*** ./js/modules/midpoint.js ***!
+  \********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+
+
+const midpoint = ([[x1, y1], [x2, y2]], array) => {
+    const getCode = (x, y) => {
+        let result = 0;
+        if (x < 333) result += 1;
+        if (x > 666) result += 2;
+        if (y < 200) result += 8;
+        if (y > 400) result += 4;
+        return result;
+    };
+
+    const isInside = (x, y) => {
+        return x >= 333 && x <= 666 && y >= 200 && y <= 400;
+    };
+
+    const arr = array || [];
+    if (Math.abs(x1 - x2) <= 1 && Math.abs(y1 - y2) <= 1) return arr;
+
+    if (isInside(x1, y1) && isInside(x2, y2)) {
+        arr.push([
+            [x1, y1],
+            [x2, y2],
+        ]);
+        return arr;
+    }
+
+    let code1 = getCode(x1, y1);
+    let code2 = getCode(x2, y2);
+    if ((code1 & code2) != 0) return arr;
+
+    midpoint([
+        [x1, y1],
+        [(x1 + x2) / 2, (y1 + y2) / 2],
+    ], arr);
+    midpoint([
+        [(x1 + x2) / 2, (y1 + y2) / 2],
+        [x2, y2],
+    ], arr);
+
+    return arr;
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (midpoint);
+
+
 /***/ })
 
 /******/ 	});
@@ -290,6 +348,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_diff__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/diff */ "./js/modules/diff.js");
 /* harmony import */ var _modules_circle__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/circle */ "./js/modules/circle.js");
 /* harmony import */ var _modules_bezie__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/bezie */ "./js/modules/bezie.js");
+/* harmony import */ var _modules_midpoint__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/midpoint */ "./js/modules/midpoint.js");
+
 
 
 
@@ -310,9 +370,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const clearCanvas = () => {
         canvas
-        .getContext("2d")
-        .clearRect(0, 0, canvas.getBoundingClientRect().width, canvas.getBoundingClientRect().height);
-    }
+            .getContext("2d")
+            .clearRect(0, 0, canvas.getBoundingClientRect().width, canvas.getBoundingClientRect().height);
+    };
 
     clearButton.addEventListener("click", clearCanvas);
 
@@ -426,7 +486,19 @@ document.addEventListener("DOMContentLoaded", () => {
                 console.log("cirus");
                 break;
             case "midpoint":
-                console.log("mid");
+                callstack.push(getCoord(e));
+                // если выбраны 2 точки
+                if (callstack.length === 2) {
+                    const arr = (0,_modules_midpoint__WEBPACK_IMPORTED_MODULE_4__.default)(callstack);
+                    console.log(arr);
+                    arr.forEach(([[x1, y1], [x2, y2]]) => {
+                        ctx.moveTo(x1,y1);
+                        ctx.lineTo(x2,y2);
+                        ctx.stroke();
+                    });
+                    console.log(callstack);
+                    callstack = [];
+                }
                 break;
             default:
                 break;
