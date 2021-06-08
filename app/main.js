@@ -233,8 +233,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-
-
 const midpoint = ([[x1, y1], [x2, y2]], array) => {
     const getCode = (x, y) => {
         let result = 0;
@@ -264,19 +262,106 @@ const midpoint = ([[x1, y1], [x2, y2]], array) => {
     let code2 = getCode(x2, y2);
     if ((code1 & code2) != 0) return arr;
 
-    midpoint([
-        [x1, y1],
-        [(x1 + x2) / 2, (y1 + y2) / 2],
-    ], arr);
-    midpoint([
-        [(x1 + x2) / 2, (y1 + y2) / 2],
-        [x2, y2],
-    ], arr);
+    midpoint(
+        [
+            [x1, y1],
+            [(x1 + x2) / 2, (y1 + y2) / 2],
+        ],
+        arr
+    );
+    midpoint(
+        [
+            [(x1 + x2) / 2, (y1 + y2) / 2],
+            [x2, y2],
+        ],
+        arr
+    );
 
     return arr;
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (midpoint);
+
+
+/***/ }),
+
+/***/ "./js/modules/sazerland.js":
+/*!*********************************!*\
+  !*** ./js/modules/sazerland.js ***!
+  \*********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+const sazerland = ([[x1, y1], [x2, y2]]) => {
+    const getCode = (x, y) => {
+        let result = 0;
+        if (x < 333) result += 1;
+        if (x > 666) result += 2;
+        if (y < 200) result += 8;
+        if (y > 400) result += 4;
+        return result;
+    };
+
+    const arr = [];
+
+    let code;
+    let code1 = getCode(x1, y1);
+    let code2 = getCode(x2, y2);
+
+    const LEFT = 1,
+        RIGHT = 2,
+        BOT = 4,
+        TOP = 8;
+
+    let p = {};
+    let p1 = { X: x1, Y: y1 };
+    let p2 = { X: x2, Y: y2 };
+
+    while (code1 != 0 || code2 != 0) {
+        if ((code1 & code2) != 0) return;
+
+        if (code1 != 0) {
+            code = code1;
+            p = {...p1};
+        } else {
+            code = code2;
+            p = {...p2};
+        }
+
+        if ((code & LEFT) != 0) {
+            p.Y += ((p1.Y - p2.Y) * (333 - p.X)) / (p1.X - p2.X);
+            p.X = 333;
+        } else if ((code & RIGHT) != 0) {
+            p.Y += ((p1.Y - p2.Y) * (666 - p.X)) / (p1.X - p2.X);
+            p.X = 666;
+        } else if ((code & BOT) != 0) {
+            p.X += ((p1.X - p2.X) * (400 - p.Y)) / (p1.Y - p2.Y);
+            p.Y = 400;
+        } else if ((code & TOP) != 0) {
+            p.X += ((p1.X - p2.X) * (200 - p.Y)) / (p1.Y - p2.Y);
+            p.Y = 200;
+        }
+
+        if (code == code1) {
+            p1 = p;
+            code1 = getCode(p1.X, p1.Y);
+        } else {
+            p2 = p;
+            code2 = getCode(p2.X, p2.Y);
+        }
+    }
+
+    arr.push([
+        [p1.X, p1.Y],
+        [p2.X, p2.Y],
+    ]);
+    return arr;
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (sazerland);
 
 
 /***/ })
@@ -349,6 +434,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_circle__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/circle */ "./js/modules/circle.js");
 /* harmony import */ var _modules_bezie__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/bezie */ "./js/modules/bezie.js");
 /* harmony import */ var _modules_midpoint__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/midpoint */ "./js/modules/midpoint.js");
+/* harmony import */ var _modules_sazerland__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modules/sazerland */ "./js/modules/sazerland.js");
+
 
 
 
@@ -480,7 +567,20 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
                 break;
             case "sazerland":
-                console.log("saz");
+                console.log('sazerland!');
+                callstack.push(getCoord(e));
+                // если выбраны 2 точки
+                if (callstack.length === 2) {
+                    const arr = (0,_modules_sazerland__WEBPACK_IMPORTED_MODULE_5__.default)(callstack);
+                    console.log(callstack);
+                    console.log(arr);
+                    arr.forEach(([[x1, y1], [x2, y2]]) => {
+                        ctx.moveTo(x1,y1);
+                        ctx.lineTo(x2,y2);
+                        ctx.stroke();
+                    });
+                    callstack = [];
+                }
                 break;
             case "cirus":
                 console.log("cirus");

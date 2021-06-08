@@ -1,5 +1,3 @@
-
-
 const midpoint = ([[x1, y1], [x2, y2]], array) => {
     const getCode = (x, y) => {
         let result = 0;
@@ -29,14 +27,20 @@ const midpoint = ([[x1, y1], [x2, y2]], array) => {
     let code2 = getCode(x2, y2);
     if ((code1 & code2) != 0) return arr;
 
-    midpoint([
-        [x1, y1],
-        [(x1 + x2) / 2, (y1 + y2) / 2],
-    ], arr);
-    midpoint([
-        [(x1 + x2) / 2, (y1 + y2) / 2],
-        [x2, y2],
-    ], arr);
+    midpoint(
+        [
+            [x1, y1],
+            [(x1 + x2) / 2, (y1 + y2) / 2],
+        ],
+        arr
+    );
+    midpoint(
+        [
+            [(x1 + x2) / 2, (y1 + y2) / 2],
+            [x2, y2],
+        ],
+        arr
+    );
 
     return arr;
 };

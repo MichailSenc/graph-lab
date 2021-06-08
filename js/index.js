@@ -3,6 +3,7 @@ import differ from "./modules/diff";
 import circle from "./modules/circle";
 import bezie from "./modules/bezie";
 import midpoint from "./modules/midpoint";
+import sazerland from "./modules/sazerland";
 
 document.addEventListener("DOMContentLoaded", () => {
     const canvas = document.querySelector("canvas");
@@ -129,7 +130,20 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
                 break;
             case "sazerland":
-                console.log("saz");
+                console.log('sazerland!');
+                callstack.push(getCoord(e));
+                // если выбраны 2 точки
+                if (callstack.length === 2) {
+                    const arr = sazerland(callstack);
+                    console.log(callstack);
+                    console.log(arr);
+                    arr.forEach(([[x1, y1], [x2, y2]]) => {
+                        ctx.moveTo(x1,y1);
+                        ctx.lineTo(x2,y2);
+                        ctx.stroke();
+                    });
+                    callstack = [];
+                }
                 break;
             case "cirus":
                 console.log("cirus");
