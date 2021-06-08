@@ -22,6 +22,9 @@ document.addEventListener("DOMContentLoaded", () => {
         canvas
             .getContext("2d")
             .clearRect(0, 0, canvas.getBoundingClientRect().width, canvas.getBoundingClientRect().height);
+        if (checkedID === 'sazerland' || checkedID === 'midpoint') {
+            drawRectangle();
+        }
     };
 
     clearButton.addEventListener("click", clearCanvas);
@@ -61,6 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     const drawRectangle = () => {
+        ctx.beginPath();
         ctx.moveTo(0, 200);
         ctx.lineTo(1000, 200);
         ctx.stroke();
