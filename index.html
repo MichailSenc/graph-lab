@@ -16,8 +16,8 @@
                     <input type="radio" class="btn-check" name="btnradio" id="brezenheim" autocomplete="off" checked />
                     <label class="btn btn-outline-primary" for="brezenheim">Брезенхейм</label>
 
-                    <input type="radio" class="btn-check" name="btnradio" id="not-cell" autocomplete="off" />
-                    <label class="btn btn-outline-primary" for="not-cell">Нецелые координаты</label>
+                    <input type="radio" class="btn-check" name="btnradio" id="not-let" autocomplete="off" />
+                    <label class="btn btn-outline-primary" for="not-let">Нецелые координаты</label>
 
                     <input type="radio" class="btn-check" name="btnradio" id="differ" autocomplete="off" />
                     <label class="btn btn-outline-primary" for="differ">Дифференциальный (DDA)</label>
@@ -61,7 +61,7 @@
                 </div>
                 <div class="d-none" id="dem-points">
                     <div class="pb-2 d-flex flex-column">
-                        <label for="first_group" class="w-10">Начальная точка: </label>
+                        <label for="first_group" class="w-100">Начальная точка: </label>
                         <div id="first_group" class="d-flex">
                             <div class="">
                                 <label class="p-2">X:</label>
@@ -74,7 +74,7 @@
                         </div>
                     </div>
                     <div class="pb-2 d-flex flex-column">
-                        <label for="second_group" class="w-10">Конечная точка: </label>
+                        <label for="second_group" class="w-100">Конечная точка: </label>
                         <div id="second_group" class="d-flex">
                             <div class="">
                                 <label class="p-2">X:</label>
@@ -86,6 +86,7 @@
                             </div>
                         </div>
                     </div>
+                    <button type="button" class="btn btn-success" id="not-let-button">Нарисовать</button>
                 </div>
                 <div class="pb-3">
                     <button type="button" class="btn btn-dark" id="clearButton">Очистить полотно</button>

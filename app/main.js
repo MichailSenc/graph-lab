@@ -287,6 +287,64 @@ const midpoint = ([[x1, y1], [x2, y2]], array) => {
 
 /***/ }),
 
+/***/ "./js/modules/notInt.js":
+/*!******************************!*\
+  !*** ./js/modules/notInt.js ***!
+  \******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+const notint = ([[x1, y1], [x2, y2]]) => {
+    const arr = [];
+
+    let x = 0;
+    let y = 0;
+    let a = Math.round(x2 - x1);
+    let b = Math.round(y2 - y1);
+    let x_mnoj = 1,
+        y_mnoj = 1;
+    if (a < 0) {
+        a = -a;
+        x_mnoj = -1;
+    }
+    if (b < 0) {
+        b = -b;
+        y_mnoj = -1;
+    }
+    let c = 1000;
+    let dh = c / Math.abs(x2 - x1);
+    //  let h = dh*(1-x1);
+    let h = 0;
+    let dv = c / Math.abs(y2 - y1);
+    // let v = dv * (1 - y1);
+    let v = 0;
+    while (h < c && v < c) {
+        arr.push([x * x_mnoj + Math.round(x1), y * y_mnoj + Math.round(y1)]);
+        if (h < v) {
+            x++;
+            h += dh;
+        } else if (h > v) {
+            y++;
+            v += dv;
+        } else {
+            arr.push([x * x_mnoj + Math.round(x1),(y + 1) * y_mnoj + Math.round(y1)])
+            x++;
+            y++;
+            h += dh;
+            v += dv;
+        }
+    }
+    return arr;
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (notint);
+
+
+/***/ }),
+
 /***/ "./js/modules/sazerland.js":
 /*!*********************************!*\
   !*** ./js/modules/sazerland.js ***!
@@ -437,6 +495,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_bezie__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/bezie */ "./js/modules/bezie.js");
 /* harmony import */ var _modules_midpoint__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/midpoint */ "./js/modules/midpoint.js");
 /* harmony import */ var _modules_sazerland__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modules/sazerland */ "./js/modules/sazerland.js");
+/* harmony import */ var _modules_notInt__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./modules/notInt */ "./js/modules/notInt.js");
+
 
 
 
@@ -446,14 +506,21 @@ __webpack_require__.r(__webpack_exports__);
 
 document.addEventListener("DOMContentLoaded", () => {
     const canvas = document.querySelector("canvas");
-    const ctx = canvas.getContext("2d");
-    ctx.fillStyle = "black";
-
     const clearButton = document.querySelector("#clearButton");
     const dotcount = document.querySelector("#dotcount");
-
+    const bezieSize = document.querySelector("#bezie-size");
+    const demPoints = document.querySelector("#dem-points");
     const radios = document.querySelectorAll("[type=radio]");
 
+    // Точки начала и конца (для алгоритма с нецелыми координытами)
+    const start1 = document.querySelector("#start-1");
+    const start2 = document.querySelector("#start-2");
+    const end1 = document.querySelector("#end-1");
+    const end2 = document.querySelector("#end-2");
+    const notIntButton = document.querySelector("#not-let-button");
+
+    const ctx = canvas.getContext("2d");
+    ctx.fillStyle = "black";
     let callstack = []; // тут будет хранится старые точки
     let checkedID = "brezenheim";
 
@@ -461,13 +528,12 @@ document.addEventListener("DOMContentLoaded", () => {
         canvas
             .getContext("2d")
             .clearRect(0, 0, canvas.getBoundingClientRect().width, canvas.getBoundingClientRect().height);
-        if (checkedID === 'sazerland' || checkedID === 'midpoint') {
+        if (checkedID === "sazerland" || checkedID === "midpoint") {
             drawRectangle();
         }
     };
 
     clearButton.addEventListener("click", clearCanvas);
-
     radios.forEach((item) =>
         item.addEventListener("change", () => {
             if (item.checked) {
@@ -479,6 +545,17 @@ document.addEventListener("DOMContentLoaded", () => {
                         drawRectangle();
                     }
                 }
+            }
+            console.log(checkedID);
+            if (checkedID === "bezie") {
+                bezieSize.classList.remove("d-none");
+                demPoints.classList.add("d-none");
+            } else if (checkedID === "not-let") {
+                demPoints.classList.remove("d-none");
+                bezieSize.classList.add("d-none");
+            } else {
+                bezieSize.classList.add("d-none");
+                demPoints.classList.add("d-none");
             }
         })
     );
@@ -520,6 +597,47 @@ document.addEventListener("DOMContentLoaded", () => {
         ctx.lineTo(666, 600);
         ctx.stroke();
     };
+
+    const checkNotIntPoints = (element, size) => {
+        const match = (element.value || "0").match(/^\s*\d+(\.\d+)?\s*$/im);
+        const toD = parseFloat(match);
+        console.log("match " + match);
+        if (!match || toD < 0 || toD > size) {
+            element.classList.add("border", "border-danger");
+            setTimeout(() => {
+                element.classList.remove("border", "border-danger");
+            }, 2000);
+        }
+        console.log(toD);
+        return !!(match && toD >= 0 && toD <= size);
+    };
+
+    const parse = (elem) => {
+        return parseFloat(elem.value || 0);
+    };
+
+    notIntButton.addEventListener("click", () => {
+        const b1 = checkNotIntPoints(start1, 1000);
+        const b2 = checkNotIntPoints(start2, 1000);
+        const b3 = checkNotIntPoints(end1, 600);
+        const b4 = checkNotIntPoints(end2, 600);
+        const isMatch = b1 && b2 && b3 && b4;
+        if (!isMatch) {
+            alert(
+                "Проверьте на корректность ввод\nКоординаты точек по X должны лежать от 0 до 1000\nКоординаты точек Y должны лежать от 0 до 600"
+            );
+            return;
+        }
+
+        (0,_modules_notInt__WEBPACK_IMPORTED_MODULE_6__.default)([
+            [parse(start1), parse(end1)],
+            [parse(start2), parse(end2)],
+        ]).forEach(([x, y]) => {
+            console.log(x,y);
+            ctx.fillRect(x, y, 1, 1);
+        });
+        callstack = [];
+    });
 
     canvas.addEventListener("click", (e) => {
         let width = canvas.getBoundingClientRect().width;
@@ -573,7 +691,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
                 break;
             case "sazerland":
-                console.log('sazerland!');
+                console.log("sazerland!");
                 callstack.push(getCoord(e));
                 // если выбраны 2 точки
                 if (callstack.length === 2) {
@@ -581,8 +699,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     console.log(callstack);
                     console.log(arr);
                     (arr || []).forEach(([[x1, y1], [x2, y2]]) => {
-                        ctx.moveTo(x1,y1);
-                        ctx.lineTo(x2,y2);
+                        ctx.moveTo(x1, y1);
+                        ctx.lineTo(x2, y2);
                         ctx.stroke();
                     });
                     callstack = [];
@@ -598,8 +716,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     const arr = (0,_modules_midpoint__WEBPACK_IMPORTED_MODULE_4__.default)(callstack);
                     console.log(arr);
                     arr.forEach(([[x1, y1], [x2, y2]]) => {
-                        ctx.moveTo(x1,y1);
-                        ctx.lineTo(x2,y2);
+                        ctx.moveTo(x1, y1);
+                        ctx.lineTo(x2, y2);
                         ctx.stroke();
                     });
                     console.log(callstack);

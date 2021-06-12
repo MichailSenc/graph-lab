@@ -4,6 +4,7 @@ import circle from "./modules/circle";
 import bezie from "./modules/bezie";
 import midpoint from "./modules/midpoint";
 import sazerland from "./modules/sazerland";
+import notint from "./modules/notInt";
 
 document.addEventListener("DOMContentLoaded", () => {
     const canvas = document.querySelector("canvas");
@@ -12,8 +13,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const bezieSize = document.querySelector("#bezie-size");
     const demPoints = document.querySelector("#dem-points");
     const radios = document.querySelectorAll("[type=radio]");
-  
-    
+
+    // Точки начала и конца (для алгоритма с нецелыми координытами)
+    const start1 = document.querySelector("#start-1");
+    const start2 = document.querySelector("#start-2");
+    const end1 = document.querySelector("#end-1");
+    const end2 = document.querySelector("#end-2");
+    const notIntButton = document.querySelector("#not-let-button");
+
     const ctx = canvas.getContext("2d");
     ctx.fillStyle = "black";
     let callstack = []; // тут будет хранится старые точки
@@ -23,13 +30,12 @@ document.addEventListener("DOMContentLoaded", () => {
         canvas
             .getContext("2d")
             .clearRect(0, 0, canvas.getBoundingClientRect().width, canvas.getBoundingClientRect().height);
-        if (checkedID === 'sazerland' || checkedID === 'midpoint') {
+        if (checkedID === "sazerland" || checkedID === "midpoint") {
             drawRectangle();
         }
     };
 
     clearButton.addEventListener("click", clearCanvas);
-
     radios.forEach((item) =>
         item.addEventListener("change", () => {
             if (item.checked) {
@@ -43,15 +49,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             }
             console.log(checkedID);
-            if (checkedID ===  "bezie") {
-                bezieSize.classList.remove('d-none')
-            } else
-            if (checkedID === "not-cell") {
-                demPoints.classList.remove('d-none')
-                
+            if (checkedID === "bezie") {
+                bezieSize.classList.remove("d-none");
+                demPoints.classList.add("d-none");
+            } else if (checkedID === "not-let") {
+                demPoints.classList.remove("d-none");
+                bezieSize.classList.add("d-none");
             } else {
-                bezieSize.classList.add('d-none')
-                demPoints.classList.add('d-none')
+                bezieSize.classList.add("d-none");
+                demPoints.classList.add("d-none");
             }
         })
     );
@@ -93,6 +99,47 @@ document.addEventListener("DOMContentLoaded", () => {
         ctx.lineTo(666, 600);
         ctx.stroke();
     };
+
+    const checkNotIntPoints = (element, size) => {
+        const match = (element.value || "0").match(/^\s*\d+(\.\d+)?\s*$/im);
+        const toD = parseFloat(match);
+        console.log("match " + match);
+        if (!match || toD < 0 || toD > size) {
+            element.classList.add("border", "border-danger");
+            setTimeout(() => {
+                element.classList.remove("border", "border-danger");
+            }, 2000);
+        }
+        console.log(toD);
+        return !!(match && toD >= 0 && toD <= size);
+    };
+
+    const parse = (elem) => {
+        return parseFloat(elem.value || 0);
+    };
+
+    notIntButton.addEventListener("click", () => {
+        const b1 = checkNotIntPoints(start1, 1000);
+        const b2 = checkNotIntPoints(start2, 1000);
+        const b3 = checkNotIntPoints(end1, 600);
+        const b4 = checkNotIntPoints(end2, 600);
+        const isMatch = b1 && b2 && b3 && b4;
+        if (!isMatch) {
+            alert(
+                "Проверьте на корректность ввод\nКоординаты точек по X должны лежать от 0 до 1000\nКоординаты точек Y должны лежать от 0 до 600"
+            );
+            return;
+        }
+
+        notint([
+            [parse(start1), parse(end1)],
+            [parse(start2), parse(end2)],
+        ]).forEach(([x, y]) => {
+            console.log(x,y);
+            ctx.fillRect(x, y, 1, 1);
+        });
+        callstack = [];
+    });
 
     canvas.addEventListener("click", (e) => {
         let width = canvas.getBoundingClientRect().width;
@@ -146,7 +193,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
                 break;
             case "sazerland":
-                console.log('sazerland!');
+                console.log("sazerland!");
                 callstack.push(getCoord(e));
                 // если выбраны 2 точки
                 if (callstack.length === 2) {
@@ -154,8 +201,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     console.log(callstack);
                     console.log(arr);
                     (arr || []).forEach(([[x1, y1], [x2, y2]]) => {
-                        ctx.moveTo(x1,y1);
-                        ctx.lineTo(x2,y2);
+                        ctx.moveTo(x1, y1);
+                        ctx.lineTo(x2, y2);
                         ctx.stroke();
                     });
                     callstack = [];
@@ -171,8 +218,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     const arr = midpoint(callstack);
                     console.log(arr);
                     arr.forEach(([[x1, y1], [x2, y2]]) => {
-                        ctx.moveTo(x1,y1);
-                        ctx.lineTo(x2,y2);
+                        ctx.moveTo(x1, y1);
+                        ctx.lineTo(x2, y2);
                         ctx.stroke();
                     });
                     console.log(callstack);
