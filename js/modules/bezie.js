@@ -16,6 +16,7 @@ const bezie = (callstack) => {
     const Bezie3Point = () => {
         let t = 0;
         let dt = 1 / Math.abs(Math.abs(callstack[0][0]) - Math.abs(callstack[2][0]));
+        dt/=50;
         while (t < 1) {
             arr.push([
                 (1 - t) * (1 - t) * callstack[0][0] + 2 * (1 - t) * t * callstack[1][0] + t * t * callstack[2][0],
@@ -28,6 +29,7 @@ const bezie = (callstack) => {
     const Bezie4Point = () => {
         let t = 0;
         let dt = 1 / Math.abs(Math.abs(callstack[0][0]) - Math.abs(callstack[3][0]));
+        dt /=50;
         while (t < 1) {
             arr.push([
                 (1 - t) * (1 - t) * (1 - t) * callstack[0][0] +

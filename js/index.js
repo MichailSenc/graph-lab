@@ -7,14 +7,15 @@ import sazerland from "./modules/sazerland";
 
 document.addEventListener("DOMContentLoaded", () => {
     const canvas = document.querySelector("canvas");
-    const ctx = canvas.getContext("2d");
-    ctx.fillStyle = "black";
-
     const clearButton = document.querySelector("#clearButton");
     const dotcount = document.querySelector("#dotcount");
-
+    const bezieSize = document.querySelector("#bezie-size");
+    const demPoints = document.querySelector("#dem-points");
     const radios = document.querySelectorAll("[type=radio]");
-
+  
+    
+    const ctx = canvas.getContext("2d");
+    ctx.fillStyle = "black";
     let callstack = []; // тут будет хранится старые точки
     let checkedID = "brezenheim";
 
@@ -40,6 +41,17 @@ document.addEventListener("DOMContentLoaded", () => {
                         drawRectangle();
                     }
                 }
+            }
+            console.log(checkedID);
+            if (checkedID ===  "bezie") {
+                bezieSize.classList.remove('d-none')
+            } else
+            if (checkedID === "not-cell") {
+                demPoints.classList.remove('d-none')
+                
+            } else {
+                bezieSize.classList.add('d-none')
+                demPoints.classList.add('d-none')
             }
         })
     );
@@ -126,7 +138,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 // если выбраны 2 точки
                 if (callstack.length >= +dotcount.value) {
                     bezie(callstack).forEach(([x, y]) => {
-                        console.log(x, y);
+                        // console.log(x, y);
                         ctx.fillRect(x, y, 1, 1);
                     });
                     console.log(callstack);
@@ -141,7 +153,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     const arr = sazerland(callstack);
                     console.log(callstack);
                     console.log(arr);
-                    arr.forEach(([[x1, y1], [x2, y2]]) => {
+                    (arr || []).forEach(([[x1, y1], [x2, y2]]) => {
                         ctx.moveTo(x1,y1);
                         ctx.lineTo(x2,y2);
                         ctx.stroke();

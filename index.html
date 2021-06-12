@@ -16,8 +16,11 @@
                     <input type="radio" class="btn-check" name="btnradio" id="brezenheim" autocomplete="off" checked />
                     <label class="btn btn-outline-primary" for="brezenheim">Брезенхейм</label>
 
+                    <input type="radio" class="btn-check" name="btnradio" id="not-cell" autocomplete="off" />
+                    <label class="btn btn-outline-primary" for="not-cell">Нецелые координаты</label>
+
                     <input type="radio" class="btn-check" name="btnradio" id="differ" autocomplete="off" />
-                    <label class="btn btn-outline-primary" for="differ">Дифференциальный</label>
+                    <label class="btn btn-outline-primary" for="differ">Дифференциальный (DDA)</label>
 
                     <input type="radio" class="btn-check" name="btnradio" id="circle" autocomplete="off" />
                     <label class="btn btn-outline-primary" for="circle">Окружность</label>
@@ -25,30 +28,70 @@
                     <input type="radio" class="btn-check" name="btnradio" id="bezie" autocomplete="off" />
                     <label class="btn btn-outline-primary" for="bezie">Безье</label>
 
-                    <input type="radio" class="btn-check" name="btnradio" id="sazerland" autocomplete="off" type-cut='1'/>
+                    <input
+                        type="radio"
+                        class="btn-check"
+                        name="btnradio"
+                        id="sazerland"
+                        autocomplete="off"
+                        type-cut="1"
+                    />
                     <label class="btn btn-outline-primary" for="sazerland">Сазерленда-Коэна</label>
 
-                    <input type="radio" class="btn-check" name="btnradio" id="cirus" autocomplete="off" type-cut='1'/>
+                    <input type="radio" class="btn-check" name="btnradio" id="cirus" autocomplete="off" type-cut="1" />
                     <label class="btn btn-outline-primary" for="cirus">Цируса-Бека</label>
 
-                    <input type="radio" class="btn-check" name="btnradio" id="midpoint" autocomplete="off" type-cut='1'/>
+                    <input
+                        type="radio"
+                        class="btn-check"
+                        name="btnradio"
+                        id="midpoint"
+                        autocomplete="off"
+                        type-cut="1"
+                    />
                     <label class="btn btn-outline-primary" for="midpoint">Средней точки</label>
                 </div>
-                <div>
-                    <div class="pb-4">
-                        <label for="dotcount">Количество точек для безье</label>
-                        <select id="dotcount">
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
+                <div class="pb-4 d-none" id="bezie-size">
+                    <label for="dotcount">Количество точек для безье</label>
+                    <select id="dotcount">
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                    </select>
+                </div>
+                <div class="d-none" id="dem-points">
+                    <div class="pb-2 d-flex flex-column">
+                        <label for="first_group" class="w-10">Начальная точка: </label>
+                        <div id="first_group" class="d-flex">
+                            <div class="">
+                                <label class="p-2">X:</label>
+                                <input class="mt-1 mb-1" id="start-1" type="text" placeholder="0" />
+                            </div>
+                            <div class="">
+                                <label class="p-2">Y:</label>
+                                <input class="mt-1 mb-1" id="end-1" type="text" placeholder="0" />
+                            </div>
+                        </div>
                     </div>
-                    <div class="pb-3">
-                        <button type="button" class="btn btn-dark" id="clearButton">Очистить полотно</button>
+                    <div class="pb-2 d-flex flex-column">
+                        <label for="second_group" class="w-10">Конечная точка: </label>
+                        <div id="second_group" class="d-flex">
+                            <div class="">
+                                <label class="p-2">X:</label>
+                                <input class="mt-1 mb-1" id="start-2" type="text" placeholder="0" />
+                            </div>
+                            <div class="">
+                                <label class="p-2">Y:</label>
+                                <input class="mt-1 mb-1" id="end-2" type="text" placeholder="0" />
+                            </div>
+                        </div>
                     </div>
                 </div>
+                <div class="pb-3">
+                    <button type="button" class="btn btn-dark" id="clearButton">Очистить полотно</button>
+                </div>
                 <div class="coordinates">X: 0; Y: 0</div>
-                <canvas id="canvas" class="border" width="1000" height="600"></canvas>
+                <canvas id="canvas" class="border align-center" width="1000" height="600"></canvas>
             </div>
         </div>
     </body>

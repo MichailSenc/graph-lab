@@ -30,6 +30,7 @@ const bezie = (callstack) => {
     const Bezie3Point = () => {
         let t = 0;
         let dt = 1 / Math.abs(Math.abs(callstack[0][0]) - Math.abs(callstack[2][0]));
+        dt/=50;
         while (t < 1) {
             arr.push([
                 (1 - t) * (1 - t) * callstack[0][0] + 2 * (1 - t) * t * callstack[1][0] + t * t * callstack[2][0],
@@ -42,6 +43,7 @@ const bezie = (callstack) => {
     const Bezie4Point = () => {
         let t = 0;
         let dt = 1 / Math.abs(Math.abs(callstack[0][0]) - Math.abs(callstack[3][0]));
+        dt /=50;
         while (t < 1) {
             arr.push([
                 (1 - t) * (1 - t) * (1 - t) * callstack[0][0] +
@@ -563,7 +565,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 // если выбраны 2 точки
                 if (callstack.length >= +dotcount.value) {
                     (0,_modules_bezie__WEBPACK_IMPORTED_MODULE_3__.default)(callstack).forEach(([x, y]) => {
-                        console.log(x, y);
+                        // console.log(x, y);
                         ctx.fillRect(x, y, 1, 1);
                     });
                     console.log(callstack);
@@ -578,7 +580,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     const arr = (0,_modules_sazerland__WEBPACK_IMPORTED_MODULE_5__.default)(callstack);
                     console.log(callstack);
                     console.log(arr);
-                    arr.forEach(([[x1, y1], [x2, y2]]) => {
+                    (arr || []).forEach(([[x1, y1], [x2, y2]]) => {
                         ctx.moveTo(x1,y1);
                         ctx.lineTo(x2,y2);
                         ctx.stroke();
