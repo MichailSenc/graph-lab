@@ -178,6 +178,165 @@ const circle = ([[x, y], [xr, yr]]) => {
 
 /***/ }),
 
+/***/ "./js/modules/cirus.js":
+/*!*****************************!*\
+  !*** ./js/modules/cirus.js ***!
+  \*****************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+const cirus = ([[x1, y1], [x2, y2]]) => {
+    console.log(x1, y1, x2, y2);
+    let coordinatesPolygon = [
+        { x: 333, y: 200 },
+        { x: 333, y: 400 },
+        { x: 666, y: 400 },
+        { x: 666, y: 200 },
+    ];
+    let k = coordinatesPolygon.length;
+    let d = [x2 - x1, y2 - y1];
+    let f = coordinatesPolygon;
+    let px, py, px1, py1;
+    let normals = [];
+    let w;
+    let n = coordinatesPolygon.length;
+    let tl = 0;
+    let tu = 1;
+    let Ddotn, Wdotn, t;
+
+    const dotProduct = ([tx1, ty1], [tx2, ty2]) => {
+        return tx1 * tx2 + ty1 * ty2;
+    };
+
+    console.log(coordinatesPolygon);
+    //get normals
+    for (let i = 0; i < n - 1; i++) {
+        normals.push([
+            coordinatesPolygon[i + 1].y - coordinatesPolygon[i].y,
+            coordinatesPolygon[i].x - coordinatesPolygon[i + 1].x,
+        ]);
+    }
+
+    normals.push([
+        coordinatesPolygon[0].y - coordinatesPolygon[n - 1].y,
+        coordinatesPolygon[n - 1].x - coordinatesPolygon[0].x,
+    ]);
+
+    console.log(normals);
+
+    for (let i = 0; i < k; i++) {
+        w = [x1 - f[i].x, y1 - f[i].y];
+
+        Ddotn = dotProduct(d, normals[i]);
+        Wdotn = dotProduct(w, normals[i]);
+
+        console.log("Ddotn: " + Ddotn);
+        console.log("Wdotn " + Wdotn);
+
+        if (Ddotn !== 0) {
+            t = (-1 * Wdotn) / Ddotn;
+            console.log("t: " + t);
+
+            if (Ddotn > 0) {
+                if (t > 1) {
+                    return;
+                } else {
+                    tl = Math.max(t, tl);
+                }
+            } else {
+                if (t < 0) {
+                    return;
+                } else {
+                    tu = Math.min(t, tu);
+                }
+            }
+        } else {
+            if (Wdotn < 0) {
+                return;
+            }
+        }
+    }
+    if (tl <= tu) {
+        px = x1 + (x2 - x1) * tl;
+        py = y1 + (y2 - y1) * tl;
+        px1 = x1 + (x2 - x1) * tu;
+        py1 = y1 + (y2 - y1) * tu;
+    }
+
+    console.log(px, py, px1, py1);
+    return [
+        [px, py],
+        [px1, py1],
+    ];
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (cirus);
+
+// const egesPoints = () => {
+//     return [
+//         [333, 200],
+//         [333, 400],
+//         [666, 400],
+//         [666, 200],
+//     ];
+// };
+
+// const getNormal = ([x1, y1], [x2, y2]) => {
+//     return [y2 - y1, x1 - x2];
+// };
+
+// const scalar = ([x1, y1], [x2, y2]) => {
+//     return x1 * y2 - y1 * x2;
+// };
+
+// let dir = seg.Direction;
+// let tA = 0.0;
+// let tB = 1.0;
+// egesPoints().foreach((edge) => {
+//     switch (Math.sign(edge.Normal.ScalarMul(dir))) {
+//         case -1: {
+//             let t = seg.IntersectionParameter(edge);
+//             if (t > tA) {
+//                 tA = t;
+//             }
+//             break;
+//         }
+//         case +1: {
+//             let t = seg.IntersectionParameter(edge);
+//             if (t < tB) {
+//                 tB = t;
+//             }
+//             break;
+//         }
+//         case 0: {
+//             if (!edge.OnLeft(seg.A)) {
+//                 return;
+//             }
+//             break;
+//         }
+//     }
+// });
+// if (tA > tB) {
+//     return;
+// }
+// seg = seg.Morph(tA, tB);
+
+// LineWithIntCords.Draw(
+//     g,
+//     new Point(Math.Round(seg.A.X), Math.Round(seg.A.Y)),
+//     new Point(Math.Round(seg.B.X), Math.Round(seg.B.Y))
+// );
+//     return [];
+// };
+
+// export default cirus;
+
+
+/***/ }),
+
 /***/ "./js/modules/diff.js":
 /*!****************************!*\
   !*** ./js/modules/diff.js ***!
@@ -496,6 +655,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_midpoint__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/midpoint */ "./js/modules/midpoint.js");
 /* harmony import */ var _modules_sazerland__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modules/sazerland */ "./js/modules/sazerland.js");
 /* harmony import */ var _modules_notInt__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./modules/notInt */ "./js/modules/notInt.js");
+/* harmony import */ var _modules_cirus__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./modules/cirus */ "./js/modules/cirus.js");
+
 
 
 
@@ -633,16 +794,13 @@ document.addEventListener("DOMContentLoaded", () => {
             [parse(start1), parse(end1)],
             [parse(start2), parse(end2)],
         ]).forEach(([x, y]) => {
-            console.log(x,y);
+            console.log(x, y);
             ctx.fillRect(x, y, 1, 1);
         });
         callstack = [];
     });
 
     canvas.addEventListener("click", (e) => {
-        let width = canvas.getBoundingClientRect().width;
-        let height = canvas.getBoundingClientRect().height;
-
         switch (checkedID) {
             case "brezenheim":
                 callstack.push(getCoord(e));
@@ -708,6 +866,21 @@ document.addEventListener("DOMContentLoaded", () => {
                 break;
             case "cirus":
                 console.log("cirus");
+                callstack.push(getCoord(e));
+                // если выбраны 2 точки
+                if (callstack.length === 2) {
+                    console.log(callstack);
+                    const arr = (0,_modules_cirus__WEBPACK_IMPORTED_MODULE_7__.default)(callstack);
+                    console.log(arr);
+                    if (arr) {
+                        const [[x11,y11],[x21,y21]] = arr;
+                        console.log(x11,y11,x21,y11);
+                        ctx.moveTo(x11, y11);
+                        ctx.lineTo(x21, y21);
+                        ctx.stroke();
+                    }
+                    callstack = [];
+                }
                 break;
             case "midpoint":
                 callstack.push(getCoord(e));

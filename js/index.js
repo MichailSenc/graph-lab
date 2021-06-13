@@ -5,6 +5,7 @@ import bezie from "./modules/bezie";
 import midpoint from "./modules/midpoint";
 import sazerland from "./modules/sazerland";
 import notint from "./modules/notInt";
+import cirus from "./modules/cirus";
 
 document.addEventListener("DOMContentLoaded", () => {
     const canvas = document.querySelector("canvas");
@@ -135,16 +136,13 @@ document.addEventListener("DOMContentLoaded", () => {
             [parse(start1), parse(end1)],
             [parse(start2), parse(end2)],
         ]).forEach(([x, y]) => {
-            console.log(x,y);
+            console.log(x, y);
             ctx.fillRect(x, y, 1, 1);
         });
         callstack = [];
     });
 
     canvas.addEventListener("click", (e) => {
-        let width = canvas.getBoundingClientRect().width;
-        let height = canvas.getBoundingClientRect().height;
-
         switch (checkedID) {
             case "brezenheim":
                 callstack.push(getCoord(e));
@@ -210,6 +208,21 @@ document.addEventListener("DOMContentLoaded", () => {
                 break;
             case "cirus":
                 console.log("cirus");
+                callstack.push(getCoord(e));
+                // если выбраны 2 точки
+                if (callstack.length === 2) {
+                    console.log(callstack);
+                    const arr = cirus(callstack);
+                    console.log(arr);
+                    if (arr) {
+                        const [[x11,y11],[x21,y21]] = arr;
+                        console.log(x11,y11,x21,y11);
+                        ctx.moveTo(x11, y11);
+                        ctx.lineTo(x21, y21);
+                        ctx.stroke();
+                    }
+                    callstack = [];
+                }
                 break;
             case "midpoint":
                 callstack.push(getCoord(e));
